@@ -1,7 +1,6 @@
 # Projeto ReactJS DIO
 
-Projeto que apresenta uma interface\
-utilizando a API do GitHub [https://api.github.com/]
+Projeto que apresenta uma interface utilizando a API do GitHub https://api.github.com/
 
 ## Funcionalidades
 
