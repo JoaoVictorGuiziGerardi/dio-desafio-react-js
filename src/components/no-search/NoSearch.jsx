@@ -2,9 +2,9 @@ import React from 'react'
 
 const NoSearch = () => {
   return (
-    <div>
-      
-    </div>
+    <>
+      <h3>Nenhuma busca foi feita!</h3>
+    </>
   )
 }
 

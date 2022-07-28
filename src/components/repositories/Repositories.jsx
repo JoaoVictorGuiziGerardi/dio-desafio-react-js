@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, TabList, Tab, TabPanel} from 'react-tabs';
 import styled from 'styled-components';
+import {RepositoryItem} from '../';
+import useGithub from '../../hooks/github-hooks';
 
 const WrapperTabs = styled(Tabs)`
     font-size: 1em;
@@ -10,7 +12,7 @@ const WrapperTabs = styled(Tabs)`
 const WrapperTabList = styled(TabList)`
     list-style: none;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 `;
 
 const WrapperTab = styled(Tab)`
@@ -37,30 +39,63 @@ const WrapperTab = styled(Tab)`
 const WrapperTabPanel = styled(TabPanel)`
     display: none;
     min-height: 40vh;
-    padding: 5px;
     margin-bottom: 2vh;
 
     &.is-selected{
-      display: block;
-      border: 1px solid rgb(143,143,189);
-      border-radius: 5px;
+      display: flex;
+      flex-wrap: wrap;
     }
 `;
 
 const Repositories = () => {
+
+  const { githubState, getRepositories, getStarred } = useGithub();
+  const [ hasUser, setHasUser] = useState(false);
+
+  useEffect(() => {
+    if(!!githubState.user.login){
+      getRepositories(githubState.user.login);
+      getStarred(githubState.user.login);
+    }
+    setHasUser(!!githubState.repositories);
+  }, [githubState.user.login]);
+
   return (
-    <WrapperTabs
-      selectedTabClassName='is-selected'
-      selectedTabPanelClassName='is-selected'
-    >
-      <WrapperTabList>
-        <WrapperTab>Repositories</WrapperTab>
-        <WrapperTab>Starred</WrapperTab>
-      </WrapperTabList>
-      <hr />
-      <WrapperTabPanel>Panel Repositories</WrapperTabPanel>
-      <WrapperTabPanel>Panel Starred</WrapperTabPanel>
-    </WrapperTabs>
+    <>
+      {hasUser ? (
+        <WrapperTabs
+          selectedTabClassName='is-selected'
+          selectedTabPanelClassName='is-selected'
+        >
+          <WrapperTabList>
+            <WrapperTab>Repositories</WrapperTab>
+            <WrapperTab>Starred</WrapperTab>
+          </WrapperTabList>
+          <hr />
+          <WrapperTabPanel>
+            {githubState.repositories.map((item) => (
+              <RepositoryItem
+                key={item.id}
+                name={item.name}
+                linkToRepo={item.html_url}
+                fullName={item.full_name}
+              />
+            ))}
+          </WrapperTabPanel>
+          <WrapperTabPanel>
+            {githubState.starred.map((item) => (
+              <RepositoryItem
+                key={item.id}
+                name={item.name}
+                linkToRepo={item.html_url}
+                fullName={item.full_name}
+              />
+            ))}
+          </WrapperTabPanel>
+        </WrapperTabs>
+        ) : <></>
+      }
+    </>
   )
 }
 

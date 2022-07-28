@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { StatusCount } from '../';
+import useGithub from '../../hooks/github-hooks';
 
 const ProfileWrapper = styled.div`
     flex:1;
@@ -9,12 +10,22 @@ const ProfileWrapper = styled.div`
     height: 20vh;
     display: flex;
     justify-content: center;
+
+    @media (max-width: 650px) {
+      flex-direction: column;
+      align-items:center;
+      justify-content: center;
+    }
 `;
 
 const ImgPerfil = styled.img`
     min-height: 50px;
     max-height: 250px;
     border-radius: 50%;
+
+    @media (max-width: 650px) {
+      max-height: 100px;
+    }
 `;
 
 const DadosWrapper = styled.div`
@@ -45,37 +56,42 @@ const DadosGerais = styled.div`
 `;
 
 const Profile = () => {
+
+  const { githubState } = useGithub();
+
   return (
     <ProfileWrapper>
       <div>
-        <ImgPerfil src="https://avatars.githubusercontent.com/u/68558987?v=4" alt="Foto de Perfil" />
+        <ImgPerfil src={githubState.user.avatar_url} alt="Foto de Perfil" />
       </div>
       <DadosWrapper>
         <div>
-          <h1>João Victor Guizi Gerardi</h1>
+          <h1>{githubState.user.name}</h1>
         </div>
         <DadosGerais>
           <h3>
             Username: 
-            <a href="#">JoaoVictorGuiziGerardi</a>
+            <a href={githubState.user.html_url}>{githubState.user.login}</a>
           </h3>
         </DadosGerais>
         <DadosGerais>
           <h3>
             Company: 
-            <p>ITShare - Soluções em Tecnologia</p>
+            <p>{githubState.user.company}</p>
           </h3>
         </DadosGerais>
         <DadosGerais>
           <h3>
             Location: 
-            <p>Uberlândia - MG</p>
+            <p>{githubState.user.location}</p>
           </h3>
         </DadosGerais>
         <DadosGerais>
           <h3>
             Blog: 
-            <a href="#">xxxxx</a>
+            <a href={githubState.user.blog}>
+              {githubState.user.blog}
+            </a>
           </h3>
         </DadosGerais>
         <StatusCount/>

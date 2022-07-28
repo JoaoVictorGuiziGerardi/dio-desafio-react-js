@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import useGithub from '../../hooks/github-hooks';
 
 const WrapperHeader = styled.div`
     margin-top: 2vh;
@@ -37,17 +38,30 @@ const WrapperHeader = styled.div`
 `;
 
 const Header = () => {
-  return (
-    <WrapperHeader>
-        <input
-            type="text" 
-            placeholder='Digite o nickname de um usuário...'
-        />
-        <button>
-            Buscar
-        </button>
-    </WrapperHeader>
-  )
+
+    const { getUser } = useGithub();
+    const [nomeParaBusca, setNomeParaBusca] = useState();
+    
+    const buscarUser = () => {
+        const input = document.getElementsByTagName('input')[0];
+        input.value = '';
+
+        if (!nomeParaBusca) return;
+        return getUser(nomeParaBusca);
+    }
+
+    return (
+        <WrapperHeader>
+            <input
+                type="text" 
+                placeholder='Digite o nickname de um usuário...'
+                onChange={(event) => setNomeParaBusca(event.target.value)}
+            />
+            <button type='submit' onClick={() => buscarUser()}>
+                Buscar
+            </button>
+        </WrapperHeader>
+    )
 }
 
 export default Header
