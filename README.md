@@ -9,3 +9,7 @@ Neste projeto, você conseguirá:
  - Procurar um usuário pelo nickname
  - Ver os dados do usuário
  - Ver os repositórios do usuário
+
+## Amostra do Projeto
+
+![plot](./image/projeto_print.png)
